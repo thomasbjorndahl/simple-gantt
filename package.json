@@ -1,0 +1,31 @@
+{
+  "name": "simple-gantt",
+  "version": "1.0.0",
+  "description": "Simple javascript library for a plain moment.js based gantt chart",
+  "main": "simpleGantt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasbjorndahl/simple-gantt.git"
+  },
+  "keywords": [
+    "gantt"
+  ],
+  "author": "Thomas Bjørndahl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomasbjorndahl/simple-gantt/issues"
+  },
+  "homepage": "https://github.com/thomasbjorndahl/simple-gantt#readme",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "moment": "^2.22.2",
+    "require": "^2.4.20"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.22",
+    "@types/moment": "^2.13.0"
+  }
+}
