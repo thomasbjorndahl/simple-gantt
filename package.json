@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/thomasbjorndahl/simple-gantt#readme",
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "moment": "^2.22.2",
     "require": "^2.4.20"
   },
