@@ -1,6 +1,6 @@
 (function ($, m) {
     var factory = function (options) {
-        
+
         if (this && this[0]) {
             var opts = {
                 lineColor: 'black',
@@ -36,27 +36,26 @@
                 },
                 defaultColor: '#e0e0e0'
             };
-            if (options) {
-                $.extend(opts, options);
-               
-                
+            if (options) {                
+                $.extend(opts, options);            
             }
-            resize(this, opts); 
+            resize(this, opts);
             var context = this[0].getContext('2d');
             draw(context, opts);
             context.stroke();
             return this;
         }
-        
-        
+
+
 
         function resize(el, opts) {
-            
+
             if (opts.scale) {
-                opts.actWidth = parseInt(el.parent().css('width'))-5;
-                el.attr('width', opts.actWidth) ;
+                opts.actWidth = parseInt(el.parent().css('width')) - 5;
+                
+                el.attr('width', opts.actWidth);
                 if (opts.minHeight) {
-                    opts.actHeight = opts.minHeight;                    
+                    opts.actHeight = opts.minHeight;
                 }
                 else {
                     opts.actHeight = parseInt(el.parent().css('height'));
@@ -89,28 +88,38 @@
                     y = y + opts.taskHeight + opts.taskSpacing;
                 }
                 if (opts.legends) {
-                    drawLegends(c,opts);
+                    drawLegends(c, opts);
                 }
                 if (opts.showNowLine) {
                     drawNowLine(c, opts);
                 }
-            }            
+            }
         }
 
         function drawHeading(c, opts, y) {
             c.font = opts.heading.font;
-            
+
             var maxSpace = opts.actWidth - opts.heading.start;
-            opts.daySpace = maxSpace / opts.data.TotalDays;
             
-            var months = m(opts.data.End).diff(m(opts.data.Start), 'month');            
+            if (opts.data.TotalDays === undefined || opts.data.TotalDays === null) {
+                throw "Could not find TotalDays";
+            }
+
+            if (opts.data.TotalDays > 0) {
+
+                opts.daySpace = maxSpace / opts.data.TotalDays;
+            }
+            else {
+                opts.daySpace = 0.1;
+            }
+            var months = m(opts.data.End).diff(m(opts.data.Start), 'month');
             var monthSpace = maxSpace / months;
 
             //Years
             c.fillText(m(opts.data.Start).year(), opts.heading.start, y + 30);
             opts.yearPositions = [];
             opts.yearPositions.push(opts.heading.start);
-            
+
             opts.monthPositions = [];
             opts.monthPositions.push(opts.heading.start);
             var dt = m(opts.data.Start).day(1);
@@ -130,7 +139,7 @@
             while (dt.diff(opts.data.End, 'days') < 0) {
                 if (id > 0) {
                     var xm = opts.heading.start + (id - 1) * monthSpace;
-                    
+
                     if (dt.month() === 0) {
                         opts.yearPositions.push(xm);
                         c.fillText(dt.year(), xm, y + 30);
@@ -148,27 +157,27 @@
 
                         }
                     }
-                    
+
                     opts.monthPositions.push(xm);
                 }
                 dt = dt.add(1, 'M');
                 id++;
             }
-            
-            
+
+
             c.stroke();
 
-            
+
         }
 
         function drawTask(c, task, opts) {
             var x = opts.actWidth - opts.margin;
-
+            
             if (opts.drawTaskBoxes) {
-                
 
-                if (opts.taskColorGradients) {                    
-                    
+
+                if (opts.taskColorGradients) {
+
                     var grd = c.createLinearGradient(0, 0, opts.actWidth - (opts.margin * 2) - 3, opts.taskHeight);
                     var gs = opts.defaultColor;
 
@@ -195,9 +204,6 @@
             c.fillStyle = opts.taskTitle.color;
             c.fillText(task.Name, opts.margin + 5, task.y + 15);
 
-            
-
-
             if (opts.drawYearLines) {
 
                 //Adding year lines
@@ -216,7 +222,7 @@
                 var dt = m(opts.data.Start).day(1);
                 var id = 1;
                 while (dt.diff(opts.data.End, 'days') < 0) {
-                    dt = dt.add(1,'M');
+                    dt = dt.add(1, 'M');
                     c.beginPath();
                     c.moveTo(opts.monthPositions[id], task.y);
                     c.lineTo(opts.monthPositions[id], task.y + opts.taskHeight);
@@ -232,7 +238,7 @@
             var dataY = task.y + (opts.taskContentHeight / 2);
             var dataL = days * opts.daySpace - opts.margin;
             var dataH = opts.taskHeight - ((opts.taskContentHeight / 2) * 2);
-
+            
             if ((dataL + dataX + opts.margin) >= opts.actWidth) {
                 dataL -= 5;
             }
@@ -270,15 +276,15 @@
             }
             if (opts.showDescriptions) {
                 c.font = opts.taskDescription.font;
-                c.fillStyle = opts.taskDescription.color;                
+                c.fillStyle = opts.taskDescription.color;
                 wrapText(c, task.Description, opts.margin + 5, task.y + 35, opts.heading.start - 3, 11);
             }
         }
 
-        function drawNowLine(c, opts) {            
-            
+        function drawNowLine(c, opts) {
+
             var days = Math.abs(m(opts.data.Start).diff(m(), 'days'));
-            c.beginPath();           
+            c.beginPath();
             c.moveTo(opts.heading.start + (days * opts.daySpace), opts.heading.height - 10);
             c.lineTo(opts.heading.start + (days * opts.daySpace), opts.taskHeight + (opts.taskHeight + opts.taskSpacing) * opts.data.Tasks.length);
             c.lineWidth = 2;
