@@ -21,7 +21,7 @@
   "homepage": "https://github.com/thomasbjorndahl/simple-gantt#readme",
   "dependencies": {
     "jquery": ">=3.5.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "require": "^2.4.20"
   },
   "devDependencies": {
