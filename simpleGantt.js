@@ -14,12 +14,16 @@
                 drawTaskBoxes: true,
                 drawYearLines: true,
                 drawMonthLines: true,
+                monthLineColor: '#c9c9c9',
                 showMonthNames: true,
                 showDescriptions: true,
                 legends: true,
                 taskColorGradients: true,
                 showNowLine: true,
+                showCounters: true,
+                legendVerticalSpacing: 3,
                 nowLineColor: 'red',
+                nowLineWidth: 2,
                 maxMonths: 30,
                 taskTitle: {
                     font: "15px Arial",
@@ -122,7 +126,7 @@
 
             opts.monthPositions = [];
             opts.monthPositions.push(opts.heading.start);
-            var dt = m(opts.data.Start).day(1);
+            var dt = m(opts.data.Start).day(-1);
             var id = 0;
             var f = 'MMM';
 
@@ -178,7 +182,8 @@
 
                 if (opts.taskColorGradients) {
 
-                    var grd = c.createLinearGradient(0, 0, opts.actWidth - (opts.margin * 2) - 3, opts.taskHeight);
+                    //var grd = c.createLinearGradient(0, 0, opts.actWidth - (opts.margin * 2) - 3, opts.taskHeight);
+                    var grd = c.createLinearGradient(opts.margin, task.y, opts.margin + (opts.actWidth - (opts.margin * 2) - 3), task.y + opts.taskHeight);
                     var gs = opts.defaultColor;
 
                     if (task.TaskType) {
@@ -226,7 +231,7 @@
                     c.beginPath();
                     c.moveTo(opts.monthPositions[id], task.y);
                     c.lineTo(opts.monthPositions[id], task.y + opts.taskHeight);
-                    c.strokeStyle = '#c9c9c9';
+                    c.strokeStyle = opts.monthLineColor; 
                     c.stroke();
                     id++;
                 }
@@ -287,7 +292,7 @@
             c.beginPath();
             c.moveTo(opts.heading.start + (days * opts.daySpace), opts.heading.height - 10);
             c.lineTo(opts.heading.start + (days * opts.daySpace), opts.taskHeight + (opts.taskHeight + opts.taskSpacing) * opts.data.Tasks.length);
-            c.lineWidth = 2;
+            c.lineWidth = opts.nowLineWidth;
             c.strokeStyle = opts.nowLineColor;
             c.stroke();
         }
@@ -314,10 +319,20 @@
 
         function drawLegends(c, opts) {
             if (opts.legendsList) {
+                var upperMargin = 0;
                 for (var i = 0; i < opts.legendsList.length; i++) {
                     c.fillStyle = opts.legendsList[i].cl;
-                    c.fillRect(opts.margin, (3 * i) + opts.margin + (5 * i), 5, 5);
-                    c.fillText(capitalize(opts.legendsList[i].text), opts.margin + 10, (3 * i) + opts.margin + (5 * i) + 5);
+                    c.fillRect(opts.margin, (3 * i) + opts.margin + (5 * i) + upperMargin, 5, 5);
+                    
+                    var countText = '';
+                    if (opts.showCounters) {
+                        var count = opts.data.Tasks.filter(function (t) {
+                            return t.TaskType === opts.legendsList[i].text;
+                        }).length;
+                        countText = ' (' + count + ')';
+                    }
+                    upperMargin += opts.legendVerticalSpacing;
+                    c.fillText(capitalize(opts.legendsList[i].text + countText), opts.margin + 10, (3 * i) + opts.margin + (5 * i) + 5 + upperMargin);
                 }
             }
         }
@@ -328,7 +343,7 @@
             }
         }
     };
-    factory.version = "1.0.0";
+    factory.version = "1.1.0";
     $.fn.simpleGantt = factory;
 
 }(jQuery, moment));
