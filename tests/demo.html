@@ -7,11 +7,22 @@
         
     </head>
     <body>
-        <div id="foo"></div>
+        <canvas id="myGantt"></canvas>
+        <script src="simpleGantt.js"></script>
+        <script>
+            $(function () {
+    
+                var data = {
+                    "Start": "2016-07-01T00:00:00", "End": "2019-07-01T00:00:00", "TotalDays": 1095.0, "DateProgress": 82, "Years": [2016, 2017, 2018, 2019], "Months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "ScheduleType": "interface", "Id": 13488,
+                    "Tasks": [
+                        { "Name": "Project schedule", "Start": "2016-07-01T00:00:00", "End": "2019-07-01T00:00:00", "Description": "From contract award and through the planned execution time", "Progress": 0, "TaskType": "project", "Id": 6, "DateProgress": 82 },
+                        { "Name": "Interface", "Start": "2018-12-12T00:00:00Z", "End": "2019-01-12T00:00:00Z", "Description": "Interface, from created date to the due date", "Progress": 0, "TaskType": "interface", "Id": 13488, "DateProgress": 6 },
+                        { "Name": "V12005-TRE-PTP", "Start": "2018-03-19T00:00:00", "End": "2018-05-07T00:00:00", "Description": "Trestakk, Piggability Test Procedure, Pig Supply, Propipe", "Progress": 0, "TaskType": "document", "Id": 5250, "DateProgress": 100 }]
+                };
+    
+                $('#myGantt').simpleGantt({ colors: { project: '#283746', document: 'red' } , minHeight: 400, lineColor : 'black', scale: true, data: data});
+            });
+        </script>
     </body>
-    <script>
-    $(function(){
-        $('#foo').simpleGantt();
-    });
-    </script>
+   
 </html>
